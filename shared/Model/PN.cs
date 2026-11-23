@@ -16,6 +16,8 @@ public class PN : Ordination {
     /// Returnerer true hvis givesDen er inden for ordinationens gyldighedsperiode og datoen huskes
     /// Returner false ellers og datoen givesDen ignoreres
     /// </summary>
+    
+    // Gemmer datoen og returnerer true, hvis dosis er givet inden for ordinationens periode (begge dage medregnet). Ellers false.
     public bool givDosis(Dato givesDen) {
         DateTime dag = givesDen.dato.Date;
         if (dag >= startDen.Date && dag <= slutDen.Date) {
@@ -25,6 +27,7 @@ public class PN : Ordination {
         return false;
     }
 
+    // Gennemsnitlig dosis pr. dag: samlet dosis delt med antal dage fra første til sidste givning. Returnerer 0, hvis der ikke er givet nogen doser.
     public override double doegnDosis() {
         if (dates.Count == 0) {
             return 0;
