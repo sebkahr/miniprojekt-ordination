@@ -131,8 +131,18 @@ public class DataService
     }
 
     public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato) {
-        // TODO: Implement!
-        return null!;
+        Patient patient = db.Patienter.FirstOrDefault(p => p.PatientId == patientId)!;
+        Laegemiddel laegemiddel = db.Laegemiddler.FirstOrDefault(l => l.LaegemiddelId == laegemiddelId)!;
+
+        // Use case: fejl hvis startdato ikke er før slutdato
+        if (startDato >= slutDato) {
+            throw new ArgumentException("Startdato skal være før slutdato");
+        }
+
+        PN pn = new PN(startDato, slutDato, antal, laegemiddel);
+        patient.ordinationer.Add(pn);
+        db.SaveChanges();
+        return pn;
     }
 
     public DagligFast OpretDagligFast(int patientId, int laegemiddelId, 
