@@ -149,8 +149,16 @@ public class DataService
     }
 
     public string AnvendOrdination(int id, Dato dato) {
-        // TODO: Implement!
-        return null!;
+        PN? pn = db.PNs.Include(p => p.dates).FirstOrDefault(p => p.OrdinationId == id);
+        if (pn == null) {
+            return $"PN-ordination med id {id} findes ikke";
+        }
+
+        if (pn.givDosis(dato)) {
+            db.SaveChanges();
+            return $"Dosis registreret {dato.dato:dd-MM-yyyy}";
+        }
+        return $"Datoen {dato.dato:dd-MM-yyyy} er uden for ordinationens gyldighedsperiode";
     }
 
     /// <summary>
@@ -160,9 +168,21 @@ public class DataService
     /// <param name="patient"></param>
     /// <param name="laegemiddel"></param>
     /// <returns></returns>
-	public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId) {
-        // TODO: Implement!
-        return -1;
-	}
+    public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId) {
+        Patient patient = db.Patienter.FirstOrDefault(p => p.PatientId == patientId)!;
+        Laegemiddel laegemiddel = db.Laegemiddler.FirstOrDefault(l => l.LaegemiddelId == laegemiddelId)!;
+
+        // Vælg faktor ud fra vægt: let < 25 kg, tung > 120 kg, ellers normal
+        double faktor;
+        if (patient.vaegt < 25) {
+            faktor = laegemiddel.enhedPrKgPrDoegnLet;
+        } else if (patient.vaegt > 120) {
+            faktor = laegemiddel.enhedPrKgPrDoegnTung;
+        } else {
+            faktor = laegemiddel.enhedPrKgPrDoegnNormal;
+        }
+
+        return patient.vaegt * faktor;
+    }
     
 }
