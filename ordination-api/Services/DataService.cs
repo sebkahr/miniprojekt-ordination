@@ -200,8 +200,15 @@ public class DataService
     /// <param name="laegemiddel"></param>
     /// <returns></returns>
     public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId) {
+        
         Patient patient = db.Patienter.FirstOrDefault(p => p.PatientId == patientId)!;
         Laegemiddel laegemiddel = db.Laegemiddler.FirstOrDefault(l => l.LaegemiddelId == laegemiddelId)!;
+
+        if (patient == null)
+            throw new ArgumentException("Patienten findes ikke!");
+
+        if (laegemiddel == null)
+            throw new ArgumentException("Laegemidlet findes ikke!");
 
         // Vælg faktor ud fra vægt: let < 25 kg, tung > 120 kg, ellers normal
         double faktor;
