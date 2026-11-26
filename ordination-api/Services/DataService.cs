@@ -26,7 +26,7 @@ public class DataService
 
         if (patients[0] == null)
         {
-            patients[0] = new Patient("121256-0512", "Jane Jensen", 63.4);
+            patients[0] = new Patient("180203-0001", "Andreas Kongerslev", 65);
             patients[1] = new Patient("070985-1153", "Finn Madsen", 83.2);
             patients[2] = new Patient("050972-1233", "Hans Jørgensen", 89.4);
             patients[3] = new Patient("011064-1522", "Ulla Nielsen", 59.9);
